@@ -1,0 +1,47 @@
+﻿@using System.Data
+@model CsvLoader3.Models.LoaderModel
+
+@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>Upload File</h2>
+
+@using (Html.BeginForm("Upload", "Loader", null, FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        <input type="file" id="dataFile" name="upload"/>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Upload" class="btn btn-default"/>
+    </div>
+
+    if (Model != null)
+    {
+        <table border="1" width="80%">
+            <thead>
+            <tr>
+                @foreach (DataColumn col in Model.Files.Columns)
+                {         
+                    <th><center>@col.ColumnName</center></th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (DataRow row in Model.Files.Rows)
+            {        
+                <tr>
+                    @foreach (DataColumn col in Model.Files.Columns)
+                    {             
+                        <td>@row[col.ColumnName]</td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+}

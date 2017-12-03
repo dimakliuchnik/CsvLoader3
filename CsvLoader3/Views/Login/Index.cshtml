@@ -1,0 +1,45 @@
+﻿@model CsvLoader3.Models.LoginModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Login</h2>
+@* Here we will add 2 form, 1 for Login and another one for 2FA token verification form *@
+@if (ViewBag.Status == null || !ViewBag.Status)
+{
+    <!--Show login form here, Viewbag.Status is used for check is already verified from our database or not-->
+    <div>@ViewBag.Message</div>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                <label for="Username">Username : </label>
+                @Html.TextBoxFor(a => a.Email, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="Password">Password : </label>
+                @Html.TextBoxFor(a => a.Password, new { @class = "form-control", type = "password" })
+            </div>
+            <input type="submit" value="Login" class="btn btn-default" />
+        }
+    </div>
+}
+else
+{
+    <!--Show 2FA verification form here-->
+    <div>@ViewBag.Message</div>
+    <div>
+        <img src="@ViewBag.BarcodeImageUrl" />
+    </div>
+    <div>
+        Manual Setup Code : @ViewBag.SetupCode
+    </div>
+    <div>
+        @using (Html.BeginForm("Verify2FA", "Login", FormMethod.Post))
+        {
+            <input type="text" name="passcode" />
+            <input type="submit" class="btn btn-success" />
+        }
+    </div>
+}
