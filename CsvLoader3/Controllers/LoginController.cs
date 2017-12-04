@@ -1,31 +1,34 @@
-﻿using System;
+﻿using CsvLoader3.Models;
+using Google.Authenticator;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using CsvLoader3.Models;
-using Google.Authenticator;
-using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace CsvLoader3.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
 
-        private readonly MongoDbHelper _mongoDbHelper = new MongoDbHelper();
+        //public LoginController()
+        //{
+        //}
+
+        public LoginController(/*IUnitOfWork unitOfWork*/)
+        {
+            _unitOfWork = new MongoUnitOfWork();
+        }
         private readonly EncrDecrHelper _encrDecrHelper = new EncrDecrHelper();
-        private const string LoginPassword = "LoginPassword";
         private const string PasswordKey = "Alexandra_2219256"; // any 10-12 char string for use as private key in google authenticator
-        
+
         // Create secret IV
         public byte[] Iv { get; } = new byte[16]
             {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
-
 
         // GET: Login
         public ActionResult Index()
@@ -41,11 +44,11 @@ namespace CsvLoader3.Controllers
             SHA256 mySha256 = SHA256Managed.Create();
             byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(PasswordKey));
 
-            var database = _mongoDbHelper.CreateConnection();
-            var loginPassword = LoadDbLoginPasswordObjects(database, _encrDecrHelper, key, Iv);
+
+            var loginPassword = LoadDbLoginPasswordObjects(_encrDecrHelper, key, Iv);
             //check username and password form our database here
             //for demo I am going to use Admin as Username and Password1 as Password static value
-            if (loginPassword.ContainsKey(login.Email) && loginPassword[login.Email]==login.Password/*login.Email == "Admin@a.com" && login.Password == "Password1"!*/)
+            if (loginPassword.ContainsKey(login.Email) && loginPassword[login.Email] == login.Password/*login.Email == "Admin@a.com" && login.Password == "Password1"!*/)
             {
                 //Dictionary<string, object> dict = new Dictionary<string, object>();
                 //dict.Add("Email", _encrDecrHelper.EncryptString(login.Email, key, Iv));
@@ -73,22 +76,17 @@ namespace CsvLoader3.Controllers
             return View();
         }
 
-        private static Dictionary<string, string> LoadDbLoginPasswordObjects(IMongoDatabase database, EncrDecrHelper encrDecrHelper, byte[] key, byte[] iv)
+        private Dictionary<string, string> LoadDbLoginPasswordObjects(EncrDecrHelper encrDecrHelper, byte[] key, byte[] iv)
         {
-            var collection = database.GetCollection<BsonDocument>(LoginPassword);
-            var cursor = collection.Find(new BsonDocument()).ToCursor();
+            var loginModels = _unitOfWork.LoginPasswords.GetAllObjectsList();
             var loginPassword = new Dictionary<string, string>();
-            foreach (var document in cursor.ToEnumerable())
+            foreach (var document in loginModels)
             {
-                var documentElements = document.Elements.ToDictionary(x => x.Name, y => y.Value);
-                loginPassword.Add(encrDecrHelper.DecryptString(documentElements["Email"].AsString,key,iv), 
-                    encrDecrHelper.DecryptString(documentElements["Password"].AsString, key, iv));
-                
+                loginPassword.Add(encrDecrHelper.DecryptString(document.Email, key, iv),
+                    encrDecrHelper.DecryptString(document.Password, key, iv));
             }
             return loginPassword;
         }
-
-
 
         public ActionResult Verify2FA()
         {
@@ -99,9 +97,7 @@ namespace CsvLoader3.Controllers
             if (!isValid)
                 return RedirectToAction("Index", "Login");
             Session["IsValid2FA"] = true;
-            return RedirectToAction("Upload", "Loader");
+            return RedirectToAction("Upload", "Files");
         }
-
-
     }
 }

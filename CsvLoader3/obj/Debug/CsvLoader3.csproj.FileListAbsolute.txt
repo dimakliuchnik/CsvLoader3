@@ -47,7 +47,6 @@ C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\Google.Authenticator.dll
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\LumenWorks.Framework.IO.dll
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\LumenWorks.Framework.IO.pdb
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\LumenWorks.Framework.IO.xml
-C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.csprojResolveAssemblyReference.cache
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Bson.dll
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Driver.Core.dll
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Driver.dll
@@ -57,3 +56,8 @@ C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Bson.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Driver.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Driver.Core.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\MongoDB.Driver.GridFS.xml
+C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\EntityFramework.dll
+C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\EntityFramework.SqlServer.dll
+C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\EntityFramework.xml
+C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\EntityFramework.SqlServer.xml
+C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.csprojResolveAssemblyReference.cache

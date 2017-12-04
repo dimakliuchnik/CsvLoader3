@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CsvLoader3.Models;
 
 namespace CsvLoader3
 {
@@ -13,6 +14,8 @@ namespace CsvLoader3
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            // DependencyResolver.CurrentBind<IUnitOfWork, MondoUnitOfWork>();
         }
     }
 }
