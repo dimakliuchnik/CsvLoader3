@@ -8,14 +8,14 @@ using MongoDB.Driver;
 
 namespace CsvLoader3.Models
 {
-    public class DbContext : System.Data.Entity.DbContext
+    public class MongoContext : System.Data.Entity.DbContext
     {
-        public DbContext()
+        public MongoContext()
             : this("MongoDb")
         {
         }
 
-        public DbContext(string connectionName)
+        public MongoContext(string connectionName)
         {
             var connectionString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
 

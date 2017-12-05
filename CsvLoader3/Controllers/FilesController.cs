@@ -11,15 +11,11 @@ namespace CsvLoader3.Controllers
 {
     public class FilesController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEntityRepository<FilesModel> _filesRepository;
 
-        //public FilesController()
-        //{
-        //}
-
-        public FilesController(/*IUnitOfWork unitOfWork*/)
+        public FilesController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new MongoUnitOfWork();
+            _filesRepository = unitOfWork.GetRepository<FilesModel>();
         }
 
         // GET: Files
@@ -30,7 +26,7 @@ namespace CsvLoader3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Upload(HttpPostedFileBase upload)
+        public ActionResult Upload(HttpPostedFileBase upload)
         {
             FilesModel filesModel = new FilesModel();
 
@@ -46,10 +42,9 @@ namespace CsvLoader3.Controllers
                         ViewBag.Message = "File uploaded successfully";
 
                         LoadCsvAndFillLoaderModel(upload, filesModel);
+                        _filesRepository.Create(filesModel);
 
-                        _unitOfWork.Files.Create(filesModel);
-
-                        List<FilesModel> models = _unitOfWork.Files.GetAllObjectsList();
+                        List<FilesModel> models = _filesRepository.GetAllObjectsList();
 
                         return View(models);
                     }

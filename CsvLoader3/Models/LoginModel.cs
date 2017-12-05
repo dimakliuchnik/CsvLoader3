@@ -8,6 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace CsvLoader3.Models
 {
+    [MongoCollectionName("LoginPassword")]
     public class LoginModel
     {
         [Key]

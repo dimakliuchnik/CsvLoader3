@@ -6,40 +6,38 @@ using System.Web;
 
 namespace CsvLoader3.Models
 {
-    public class MongoUnitOfWork : IUnitOfWork, IDisposable
+    public class MongoUnitOfWork : IUnitOfWork
     {
-        private readonly System.Data.Entity.DbContext _db = new DbContext();
-        private IRepository<FilesModel> _fileRepository;
-        private IRepository<LoginModel> _loginRepository;
+        private readonly MongoContext _db = new MongoContext();
+        private static readonly Dictionary<Type, IRepository> Repositories = new Dictionary<Type, IRepository>();
         private bool _disposed = false;
 
-        public override IRepository<FilesModel> Files
+        public IEntityRepository<T> GetRepository<T>()
         {
-            get
+            var t = typeof(T);
+            if (!Repositories.ContainsKey(t))
             {
-                if (_fileRepository == null)
-                    _fileRepository = new MongoLoaderRepository();
-                return _fileRepository;
+                var repository = new MongoEntityRepository<T>(_db);
+                Repositories.Add(t, repository);
             }
+
+            return Repositories[t] as IEntityRepository<T>;
+  
         }
 
-        public override IRepository<LoginModel> LoginPasswords
+        ~MongoUnitOfWork()
         {
-            get
-            {
-                if (_loginRepository == null)
-                    _loginRepository = new MongoLoginRepository();
-                return _loginRepository;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public override void Save()
+        public void Save()
         {
             _db.SaveChanges();
         }
 
 
-        public override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!this._disposed)
             {
@@ -51,10 +49,9 @@ namespace CsvLoader3.Models
             }
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

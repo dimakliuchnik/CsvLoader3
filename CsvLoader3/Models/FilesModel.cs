@@ -9,6 +9,7 @@ using MongoDB.Driver;
 
 namespace CsvLoader3.Models
 {
+    [MongoCollectionName("Files")]
     public class FilesModel
     {
         [BsonElement("_id")]

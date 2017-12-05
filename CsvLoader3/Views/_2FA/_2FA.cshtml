@@ -1,0 +1,23 @@
+﻿@model CsvLoader3.Models._2FAModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div>@ViewBag.Message</div>
+<div>
+    <img src="@Model.QrCodeSetupImageUrl" />
+</div>
+<div>
+    Manual Setup Code : @Model.ManualEntryKey
+</div>
+<div>
+    @using (Html.BeginForm("Verify2FA", "_2FA", FormMethod.Post))
+    {
+        <input type="text" name="passcode" />
+        <input type="submit" class="btn btn-success" />
+    }
+</div>
+

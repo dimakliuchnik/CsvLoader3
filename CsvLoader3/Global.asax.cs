@@ -15,7 +15,8 @@ namespace CsvLoader3
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            // DependencyResolver.CurrentBind<IUnitOfWork, MondoUnitOfWork>();
+            Bootstrapper.Initialise();
+            
         }
     }
 }
