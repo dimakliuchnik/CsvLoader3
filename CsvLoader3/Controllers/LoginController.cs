@@ -32,6 +32,7 @@ namespace CsvLoader3.Controllers
             //return View(model);
 
             var message = "";
+            var userUniqueKey = "";
             var status = false;
             SHA256 mySha256 = SHA256Managed.Create();
             byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(PasswordKey));
@@ -50,11 +51,12 @@ namespace CsvLoader3.Controllers
 
                 //2FA Setup
                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-                var userUniqueKey = (login.Email + PasswordKey);
+                userUniqueKey = (login.Email + PasswordKey);
                 Session["UserUniqueKey"] = userUniqueKey;
                 var setupInfo = tfa.GenerateSetupCode("Dotnet Awesome", login.Email, userUniqueKey, 300, 300);
                 ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
                 ViewBag.SetupCode = setupInfo.ManualEntryKey;
+                return RedirectToAction("_2FA", "_2FA", new { @qrCodeSetupImageUrl = ViewBag.BarcodeImageUrl, @manualEntryKey = ViewBag.SetupCode });
             }
             else
             {
@@ -62,20 +64,7 @@ namespace CsvLoader3.Controllers
             }
             ViewBag.Message = message;
             ViewBag.Status = status;
-            return RedirectToAction("_2FA", "_2FA", new { @qrCodeSetupImageUrl = ViewBag.BarcodeImageUrl, @manualEntryKey = ViewBag.SetupCode });
-           // return View();
+            return RedirectToAction("Index", "Login");
         }
-
-        //public ActionResult Verify2FA()
-        //{
-        //    var token = Request["passcode"];
-        //    var tfa = new TwoFactorAuthenticator();
-        //    var userUniqueKey = Session["UserUniqueKey"].ToString();
-        //    var isValid = tfa.ValidateTwoFactorPIN(userUniqueKey, token);
-        //    if (!isValid)
-        //        return RedirectToAction("Index", "Login");
-        //    Session["IsValid2FA"] = true;
-        //    return RedirectToAction("Upload", "Files");
-        //}
     }
 }

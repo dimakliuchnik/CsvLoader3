@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
-using CsvLoader3.Models;
+using CsvLoader3.App_Start;
 
 namespace CsvLoader3
 {
@@ -15,6 +16,7 @@ namespace CsvLoader3
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
             Bootstrapper.Initialise();
             
         }

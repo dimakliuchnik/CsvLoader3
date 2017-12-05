@@ -14,7 +14,6 @@ namespace CsvLoader3.Controllers
         public ActionResult _2FA(string qrCodeSetupImageUrl, string manualEntryKey)
         {
             _2FAModel model = new _2FAModel {QrCodeSetupImageUrl = qrCodeSetupImageUrl, ManualEntryKey = manualEntryKey };
-            
             return View(model);
         }
 
