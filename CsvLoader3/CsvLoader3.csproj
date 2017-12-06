@@ -230,6 +230,7 @@
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\Helper.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\Utils.cs" />
     <Compile Include="Controllers\_2FAController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
