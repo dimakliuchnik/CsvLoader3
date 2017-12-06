@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace CsvLoader3
@@ -14,10 +10,10 @@ namespace CsvLoader3
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
-            );
+                 name: "Default",
+                 url: "{controller}/{action}/{id}",
+                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
+             );
         }
     }
 }

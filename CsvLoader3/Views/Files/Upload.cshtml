@@ -69,38 +69,38 @@
                 });
             }
 
-            function UploadFile(TargetFile) {
+            function UploadFile(targetFile) {
                 //debugger;
                 // create array to store the buffer chunks
-                var FileChunk = [];
+                var fileChunk = [];
                 // the file object itself that we will work with
-                var file = TargetFile[0];
+                var file = targetFile[0];
                 // set up other initial vars
-                var MaxFileSizeMB = 1;
-                var BufferChunkSize = MaxFileSizeMB * (1024 * 1024);
-                var ReadBuffer_Size = 1024;
-                var FileStreamPos = 0;
+                var maxFileSizeMb = 1;
+                var bufferChunkSize = maxFileSizeMb * (1024 * 1024);
+                var readBufferSize = 1024;
+                var fileStreamPos = 0;
                 // set the initial chunk length
-                var EndPos = BufferChunkSize;
-                var Size = file.size;
+                var endPos = bufferChunkSize;
+                var size = file.size;
 
                 // add to the FileChunk array until we get to the end of the file
-                while (FileStreamPos < Size) {
+                while (fileStreamPos < size) {
                     // "slice" the file from the starting position/offset, to  the required length
-                    FileChunk.push(file.slice(FileStreamPos, EndPos));
-                    FileStreamPos = EndPos; // jump by the amount read
-                    EndPos = FileStreamPos + BufferChunkSize; // set next chunk length
+                    fileChunk.push(file.slice(fileStreamPos, endPos));
+                    fileStreamPos = endPos; // jump by the amount read
+                    endPos = fileStreamPos + bufferChunkSize; // set next chunk length
                 }
                 // get total number of "files" we will be sending
-                var TotalParts = FileChunk.length;
-                var PartCount = 0;
+                var totalParts = fileChunk.length;
+                var partCount = 0;
                 // loop through, pulling the first item from the array each time and sending it
-                while (chunk = FileChunk.shift()) {
-                    PartCount++;
+                while (chunk = fileChunk.shift()) {
+                    partCount++;
                     // file name convention
-                    var FilePartName = file.name + ".part_" + PartCount + "." + TotalParts;
+                    var filePartName = file.name + ".part_" + partCount + "." + totalParts;
                     // send the file
-                    UploadFileChunk(chunk, FilePartName);
+                    UploadFileChunk(chunk, filePartName);
                 }
             }
         </script>
