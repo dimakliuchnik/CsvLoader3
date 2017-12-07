@@ -228,7 +228,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\EncrDecrHelper.cs" />
     <Compile Include="Controllers\FilesController.cs" />
-    <Compile Include="Controllers\Helper.cs" />
+    <Compile Include="Controllers\LoadController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\Utils.cs" />
     <Compile Include="Controllers\_2FAController.cs" />
@@ -267,6 +267,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Images\" />
     <Folder Include="Views\Default\" />
+    <Folder Include="Views\Load\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -37,7 +37,7 @@ namespace CsvLoader3.Controllers
             SHA256 mySha256 = SHA256Managed.Create();
             byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(PasswordKey));
 
-            var loginPassword = Helper.LoadDbLoginPasswordObjects(_loginRepository, _encrDecrHelper, key, Iv);
+            var loginPassword = Utils.LoadDbLoginPasswordObjects(_loginRepository, _encrDecrHelper, key, Iv);
             if (loginPassword.ContainsKey(login.Email) && loginPassword[login.Email] == login.Password)
             {
                 //Dictionary<string, object> dict = new Dictionary<string, object>();

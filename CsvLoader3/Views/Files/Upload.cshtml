@@ -6,6 +6,7 @@
 }
 
 <h2>Upload File</h2>
+<p>@ViewBag.Message</p>
 
 @using (Html.BeginForm("Upload", "Files", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -17,9 +18,9 @@
     </div>
 
     <div class="form-group">
-       <a href="#" id="btnUpload" value="Upload" class="btn btn-primary">Upload file</a>
+        <!--<a href="#" id="btnUpload" value="Upload" class="btn btn-primary">Upload file</a>-->
         <!--<input type="submit" id ="btnUpload" value="Upload" class="btn btn-default" />-->
-<!--<input type="submit" id ="btnUpload" class="btn btn-default" />-->
+        <input type="submit" id ="btnUpload" class="btn btn-default" />
     </div>
 
     if (Model != null)
@@ -45,17 +46,22 @@
 }
 
     @section Scripts
-{
+    {
         <script>
 
-            $(document).ready(function () {
+            $(document).ready(function() {
 
                 $('#btnUpload').click(function () {
-                    UploadFile($('#uploadFile')[0].files);
+                    //   var string = '#uploadFile';
+                    //   var substring = ".csv";
+                        
+                    //if (string.includes(substring)){
+                            UploadFile($('#uploadFile')[0].files);
+                   // }
                 }
-                );
+            );
 
-            });
+        });
 
             function UploadFileChunk(Chunk, FileName) {
                 var FD = new FormData();

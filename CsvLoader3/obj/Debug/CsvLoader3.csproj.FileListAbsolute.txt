@@ -76,6 +76,6 @@ C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\System.Web.Webpages.Deployment.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\System.Web.Webpages.Razor.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\System.Web.Helpers.xml
 C:\WORK\GIT\CsvLoader3\CsvLoader3\bin\System.Web.Mvc.xml
-C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.csprojResolveAssemblyReference.cache
 C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.dll
 C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.pdb
+C:\WORK\GIT\CsvLoader3\CsvLoader3\obj\Debug\CsvLoader3.csprojResolveAssemblyReference.cache
