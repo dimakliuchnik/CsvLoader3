@@ -53,7 +53,7 @@ namespace CsvLoader3.Controllers
                     return View();
                 }
 
-                ViewBag.Message = "File uploaded successfully.";
+                //ViewBag.Message = "File uploaded successfully.";
 
                 FilesModel filesModel = Utils.LoadCsvHeaderAndFillLoaderModel(file);
 
@@ -71,7 +71,7 @@ namespace CsvLoader3.Controllers
 
                 _filesRepository.Create(filesModel);
                 models.Add(filesModel);
-
+                ModelState.AddModelError("File", "File uploaded successfully.");
                 return View(models);
             }
             models = _filesRepository.GetAllObjectsList();

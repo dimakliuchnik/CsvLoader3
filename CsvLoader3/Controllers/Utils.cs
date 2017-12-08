@@ -205,10 +205,6 @@ namespace CsvLoader3.Controllers
                      path = Path.Combine(uploadPath, fileName);
                     try
                     {
-                        if (System.IO.File.Exists(path))
-                        {
-                            System.IO.File.Delete(path);
-                        }
                         using (var fileStream = System.IO.File.Create(path))
                         {
                             stream.CopyTo(fileStream);
