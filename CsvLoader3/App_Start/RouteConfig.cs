@@ -9,6 +9,13 @@ namespace CsvLoader3
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoute(
+            //    "GoToUpload",
+            //    "Files/Upload/{fileName}",
+            //    new { controller = "Files", action = "Upload", fileName = UrlParameter.Optional}
+            //);
+
+
             routes.MapRoute(
                  name: "Default",
                  url: "{controller}/{action}/{id}",

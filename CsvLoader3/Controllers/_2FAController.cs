@@ -19,13 +19,15 @@ namespace CsvLoader3.Controllers
 
         public ActionResult Verify2FA()
         {
-            var token = Request["passcode"];
+            var request = Request;
+            var session = Session;
+            var token = request["passcode"];
             var tfa = new TwoFactorAuthenticator();
-            var userUniqueKey = Session["UserUniqueKey"].ToString();
+            var userUniqueKey = session["UserUniqueKey"].ToString(); ;
             var isValid = tfa.ValidateTwoFactorPIN(userUniqueKey, token);
             if (!isValid)
                 return RedirectToAction("Index", "Login");
-            Session["IsValid2FA"] = true;
+            session["IsValid2FA"] = true;
             return RedirectToAction("Upload", "Files");
         }
 

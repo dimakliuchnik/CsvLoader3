@@ -157,7 +157,7 @@ namespace CsvLoader3.Controllers
             filesModel.Header = "";
             foreach (var column in headers)
             {
-                filesModel.Header = String.Concat(filesModel.Header, "\n", column);
+                filesModel.Header = String.Concat(filesModel.Header, "\n", column, ";");
             }
             filesModel.Header = filesModel.Header.Trim();
             filesModel.FileName = file;//
@@ -189,9 +189,10 @@ namespace CsvLoader3.Controllers
             return loginPassword;
         }
 
-        public static string ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
+        public static string ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server, out bool result)
         {
             string path = "";
+            result = false; 
             foreach (string file in files)
             {
                 var fileDataContent = files[file];
@@ -202,13 +203,9 @@ namespace CsvLoader3.Controllers
                     var fileName = Path.GetFileName(fileDataContent.FileName);
                     var uploadPath = server.MapPath("~/App_Data/uploads");
                     Directory.CreateDirectory(uploadPath);
-                     path = Path.Combine(uploadPath, fileName);
+                    path = Path.Combine(uploadPath, fileName);
                     try
                     {
-                        if (System.IO.File.Exists(path))
-                        {
-                            System.IO.File.Delete(path);
-                        }
                         using (var fileStream = System.IO.File.Create(path))
                         {
                             stream.CopyTo(fileStream);
@@ -216,7 +213,7 @@ namespace CsvLoader3.Controllers
 
                         // Once the file part is saved, see if we have enough to merge it
                         var ut = new Utils();
-                        var result = ut.MergeFile(path);
+                        result = ut.MergeFile(path);
 
                         //remove parts when initial file is constructed back
                         if (result)
@@ -241,7 +238,7 @@ namespace CsvLoader3.Controllers
                     }
                 }
             }
-            return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
+            return path.Contains(partToken)?path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal)):"";//.Split('/','\\').Last().Replace(".csv","");
         }
     }
     

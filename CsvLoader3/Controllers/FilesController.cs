@@ -1,7 +1,10 @@
 ﻿using CsvLoader3.Models;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace CsvLoader3.Controllers
 {
@@ -16,66 +19,98 @@ namespace CsvLoader3.Controllers
 
         // GET: Files
         [HttpGet]
-        public ActionResult Upload(string fileName)
+        public ActionResult Upload(string fileNameParameter)
         {
-            if (fileName != null)
+
+            if (fileNameParameter != null)
             {
-                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
+                List<FilesModel> temp = _filesRepository.GetAllObjectsList();
+
+                if(!temp.Select(_ => _.FileName).Contains(fileNameParameter))
+                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileNameParameter));
+                return RedirectToAction("Upload");
             }
 
             List<FilesModel> models = _filesRepository.GetAllObjectsList();
             return View(models);
         }
 
-        public ActionResult UploadFile()
+        
+        [HttpPost]
+        public ActionResult Upload()
         {
+            string fileName = "";
             var files = Request.Files;
             var server = Server;
-            Utils.ProcessWithFileLoading(files, server);
-            return new ViewResult();
-        }
+            bool result;
+            fileName = Utils.ProcessWithFileLoading(files, server, out result);
+            List<FilesModel> temp = _filesRepository.GetAllObjectsList();
+            if (!temp.Select(_ => _.FileName).Contains(fileName))
+                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
 
-        [HttpPost]
-        public ActionResult Upload(HttpPostedFileBase file)
-        {
-            List<FilesModel> models = _filesRepository.GetAllObjectsList();
-            if (ModelState.IsValid && file != null)
+
+            if (result)
             {
-                if (string.IsNullOrEmpty(file.FileName))
-                {
-                    ModelState.AddModelError("File", "Please choose Your file.");
-                    return View(models);
-                }
-
-                if (!file.FileName.EndsWith(".csv"))
-                {
-                    ModelState.AddModelError("File", "This file format is not supported.");
-                    return View();
-                }
-
-                ViewBag.Message = "File uploaded successfully.";
-
-                FilesModel filesModel = Utils.LoadCsvHeaderAndFillLoaderModel(file);
-
-                if (filesModel == null)
-                {
-                    ModelState.AddModelError("File", "Header haven't been read correctly.");
-                    return View(models);
-                }
-
-                if (Utils.CheckFileIsAlreadyLoaded(models, filesModel))
-                {
-                    ModelState.AddModelError("File", "This file has been already loaded.");
-                    return View(models);
-                }
-
-                _filesRepository.Create(filesModel);
-                models.Add(filesModel);
-
-                return View(models);
+                return RedirectToAction("Upload", "Files", new { fileNameParameter = fileName });
             }
-            models = _filesRepository.GetAllObjectsList();
-            return View(models);
+            else
+            {
+                return Redirect(Request.UrlReferrer.ToString());
+            }
         }
+
+
+
+
+        //    public ActionResult UploadFile()
+        //    {
+        //        var files = Request.Files;
+        //        var server = Server;
+        //        Utils.ProcessWithFileLoading(files, server);
+        //        return new ViewResult();
+        //    }
+
+        //    [HttpPost]
+        //    public ActionResult Upload(HttpPostedFileBase file)
+        //    {
+        //        List<FilesModel> models = _filesRepository.GetAllObjectsList();
+        //        if (ModelState.IsValid && file != null)
+        //        {
+        //            if (string.IsNullOrEmpty(file.FileName))
+        //            {
+        //                ModelState.AddModelError("File", "Please choose Your file.");
+        //                return View(models);
+        //            }
+
+        //            if (!file.FileName.EndsWith(".csv"))
+        //            {
+        //                ModelState.AddModelError("File", "This file format is not supported.");
+        //                return View();
+        //            }
+
+        //            ViewBag.Message = "File uploaded successfully.";
+
+        //            FilesModel filesModel = Utils.LoadCsvHeaderAndFillLoaderModel(file);
+
+        //            if (filesModel == null)
+        //            {
+        //                ModelState.AddModelError("File", "Header haven't been read correctly.");
+        //                return View(models);
+        //            }
+
+        //            if (Utils.CheckFileIsAlreadyLoaded(models, filesModel))
+        //            {
+        //                ModelState.AddModelError("File", "This file has been already loaded.");
+        //                return View(models);
+        //            }
+
+        //            _filesRepository.Create(filesModel);
+        //            models.Add(filesModel);
+
+        //            return View(models);
+        //        }
+        //        models = _filesRepository.GetAllObjectsList();
+        //        return View(models);
+        //    }
     }
 }
