@@ -20,7 +20,7 @@
     <div class="form-group">
         <!--<a href="#" id="btnUpload" value="Upload" class="btn btn-primary">Upload file</a>-->
         <!--<input type="submit" id ="btnUpload" value="Upload" class="btn btn-default" />-->
-        <input type="submit" id ="btnUpload" class="btn btn-default" />
+        <input type="submit" id="btnUpload" class="btn btn-default" />
     </div>
 
     if (Model != null)
@@ -33,91 +33,92 @@
                 </tr>
             </thead>
             <tbody>
-            @if (Model.Count > 0)
-            {
-                foreach (var row in Model)
+                @if (Model.Count > 0)
+                {
+                    foreach (var row in Model)
+                    {
+                        <tr>
+                            <td>@row.FileName</td>
+                            <td>@row.Header</td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@row.FileName</td>
-                        <td>@row.Header</td>
+                        <td>No data</td>
+                        <td>No data</td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td>No data</td>
-                    <td>No data</td>
-                </tr>
-            }
             </tbody>
         </table>
     }
 }
 
-    @section Scripts
+@section Scripts
     {
-        <script>
+    <script>
 
-            $(document).ready(function() {
+        $(document).ready(function () {
 
-                $('#btnUpload').click(function () {
-                    //   var string = '#uploadFile';
-                    //   var substring = ".csv";
-                        
-                    //if (string.includes(substring)){
-                            UploadFile($('#uploadFile')[0].files);
-                   // }
+            $('#btnUpload').click(function () {
+                var fullPath = document.getElementById('uploadFile').value;
+                var filename = fullPath.split('\\').pop().split('/').pop();
+                var substring = ".csv";
+
+                if (filename.includes(substring)) {
+                    UploadFile($('#uploadFile')[0].files);
                 }
-            );
+            }
+        );
 
         });
 
-            function UploadFileChunk(Chunk, FileName) {
-                var FD = new FormData();
-                FD.append('file', Chunk, FileName);
-                $.ajax({
-                    type: "POST",
-                    url: 'http://localhost:65166/Files/UploadFile/',
-                    contentType: false,
-                    processData: false,
-                    data: FD
-                });
-            }
+        function UploadFileChunk(Chunk, FileName) {
+            var FD = new FormData();
+            FD.append('file', Chunk, FileName);
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:65166/Files/UploadFile/',
+                contentType: false,
+                processData: false,
+                data: FD
+            });
+        }
 
-            function UploadFile(targetFile) {
-                //debugger;
-                // create array to store the buffer chunks
-                var fileChunk = [];
-                // the file object itself that we will work with
-                var file = targetFile[0];
-                // set up other initial vars
-                var maxFileSizeMb = 1;
-                var bufferChunkSize = maxFileSizeMb * (1024 * 1024);
-                var readBufferSize = 1024;
-                var fileStreamPos = 0;
-                // set the initial chunk length
-                var endPos = bufferChunkSize;
-                var size = file.size;
+        function UploadFile(targetFile) {
+            //debugger;
+            // create array to store the buffer chunks
+            var fileChunk = [];
+            // the file object itself that we will work with
+            var file = targetFile[0];
+            // set up other initial vars
+            var maxFileSizeMb = 1;
+            var bufferChunkSize = maxFileSizeMb * (1024 * 1024);
+            var readBufferSize = 1024;
+            var fileStreamPos = 0;
+            // set the initial chunk length
+            var endPos = bufferChunkSize;
+            var size = file.size;
 
-                // add to the FileChunk array until we get to the end of the file
-                while (fileStreamPos < size) {
-                    // "slice" the file from the starting position/offset, to  the required length
-                    fileChunk.push(file.slice(fileStreamPos, endPos));
-                    fileStreamPos = endPos; // jump by the amount read
-                    endPos = fileStreamPos + bufferChunkSize; // set next chunk length
-                }
-                // get total number of "files" we will be sending
-                var totalParts = fileChunk.length;
-                var partCount = 0;
-                // loop through, pulling the first item from the array each time and sending it
-                while (chunk = fileChunk.shift()) {
-                    partCount++;
-                    // file name convention
-                    var filePartName = file.name + ".part_" + partCount + "." + totalParts;
-                    // send the file
-                    UploadFileChunk(chunk, filePartName);
-                }
+            // add to the FileChunk array until we get to the end of the file
+            while (fileStreamPos < size) {
+                // "slice" the file from the starting position/offset, to  the required length
+                fileChunk.push(file.slice(fileStreamPos, endPos));
+                fileStreamPos = endPos; // jump by the amount read
+                endPos = fileStreamPos + bufferChunkSize; // set next chunk length
             }
-        </script>
-    }
+            // get total number of "files" we will be sending
+            var totalParts = fileChunk.length;
+            var partCount = 0;
+            // loop through, pulling the first item from the array each time and sending it
+            while (chunk = fileChunk.shift()) {
+                partCount++;
+                // file name convention
+                var filePartName = file.name + ".part_" + partCount + "." + totalParts;
+                // send the file
+                UploadFileChunk(chunk, filePartName);
+            }
+        }
+    </script>
+}

@@ -50,10 +50,8 @@ namespace CsvLoader3.Controllers
                 if (!file.FileName.EndsWith(".csv"))
                 {
                     ModelState.AddModelError("File", "This file format is not supported.");
-                    return View();
+                    return View(models);
                 }
-
-                //ViewBag.Message = "File uploaded successfully.";
 
                 FilesModel filesModel = Utils.LoadCsvHeaderAndFillLoaderModel(file);
 
