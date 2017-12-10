@@ -19,9 +19,10 @@ namespace CsvLoader3.Controllers
         [HttpGet]
         public ActionResult Upload(string fileName)
         {
-            var cookie = Utils.ReadCookie(Request);
+           // var cookie = Utils.ReadCookie(Request);
 
-            if (cookie!=null && cookie.Value == "Logged")
+            if ((Session["IsValid2FA"]!=null && (bool)Session["IsValid2FA"]))
+            //if (cookie!=null && cookie.Value == "Logged")
             {
                 if (fileName != null)
                 {

@@ -192,7 +192,7 @@ namespace CsvLoader3.Controllers
             return loginPassword;
         }
 
-        public static string ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
+        public static void ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
         {
             string path = "";
             foreach (string file in files)
@@ -240,28 +240,28 @@ namespace CsvLoader3.Controllers
                     }
                 }
             }
-            return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
+            //return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
         }
 
 
-        public static void WriteAuthCookie(HttpResponseBase response)
-        {
-            HttpCookie myCookie = new HttpCookie(cookieName)
-            {
-                Value = "Logged",
-                Expires = DateTime.Now.AddDays(1)
-            };
+        //public static void WriteAuthCookie(HttpResponseBase response)
+        //{
+        //    HttpCookie myCookie = new HttpCookie(cookieName)
+        //    {
+        //        Value = "Logged",
+        //        Expires = DateTime.Now.AddDays(1)
+        //    };
             
-            // Add the cookie.
-            response.Cookies.Add(myCookie); 
-        }
+        //    // Add the cookie.
+        //    response.Cookies.Add(myCookie); 
+        //}
 
-        public static HttpCookie ReadCookie(HttpRequestBase request)
-        {
-            HttpCookie myCookie = request.Cookies[cookieName];
+        //public static HttpCookie ReadCookie(HttpRequestBase request)
+        //{
+        //    HttpCookie myCookie = request.Cookies[cookieName];
 
-            return myCookie;
-        }
+        //    return myCookie;
+        //}
 
 
     }

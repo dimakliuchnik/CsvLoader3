@@ -26,7 +26,7 @@ namespace CsvLoader3.Controllers
             if (!isValid)
                 return RedirectToAction("Index", "Login");
             Session["IsValid2FA"] = true;
-            Utils.WriteAuthCookie(Response);
+          //  Utils.WriteAuthCookie(Response);
             return RedirectToAction("Upload", "Files");
         }
 
