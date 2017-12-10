@@ -238,7 +238,12 @@ namespace CsvLoader3.Controllers
                     }
                 }
             }
-            return path.Contains(partToken)?path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal)):"";//.Split('/','\\').Last().Replace(".csv","");
+            if (result)
+            {
+                return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
+            }
+
+            return "";//.Split('/','\\').Last().Replace(".csv","");
         }
     }
     

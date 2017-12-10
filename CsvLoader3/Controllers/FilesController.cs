@@ -45,7 +45,7 @@ namespace CsvLoader3.Controllers
             bool result;
             fileName = Utils.ProcessWithFileLoading(files, server, out result);
             List<FilesModel> temp = _filesRepository.GetAllObjectsList();
-            if (!temp.Select(_ => _.FileName).Contains(fileName))
+            if (!temp.Select(_ => _.FileName).Contains(fileName) && result)
                 _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
 
 
@@ -55,6 +55,8 @@ namespace CsvLoader3.Controllers
             }
             else
             {
+                return new EmptyResult();
+                
                 return Redirect(Request.UrlReferrer.ToString());
             }
         }

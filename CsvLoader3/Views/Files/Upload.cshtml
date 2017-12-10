@@ -57,20 +57,20 @@
 }
 
 @section Scripts
-    {
+{
     <script>
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            $('#btnUpload').click(function () {
-                //   var string = '#uploadFile';
-                //   var substring = ".csv";
+            $('#btnUpload').click(function() {
+                    //   var string = '#uploadFile';
+                    //   var substring = ".csv";
 
-                //if (string.includes(substring)){
-                UploadFile($('#uploadFile')[0].files);
-                // }
-            }
-        );
+                    //if (string.includes(substring)){
+                    UploadFile($('#uploadFile')[0].files);
+                    // }
+                }
+            );
 
         });
 
@@ -82,14 +82,18 @@
                 url: 'http://localhost:65166/Files/Upload/',
                 contentType: false,
                 processData: false,
-                data: FD,
-                success: function (data) {
-                    if (data.success == true) { // if true (1)
-                        setTimeout(function () {// wait for 5 secs(2)
-                            location.reload(); // then reload the page.(3)
-                        }, 5000);
-                    }
-                }
+                data: FD
+
+                //complete: function(xhr) {
+                //    status.html(xhr.responseText);
+                //}
+                //success: function (data) {
+                //    if (data.success == true) { // if true (1)
+                //        setTimeout(function () {// wait for 5 secs(2)
+                //            location.reload(); // then reload the page.(3)
+                //        }, 5000);
+                //    }
+                //}
             });
         }
 
@@ -116,16 +120,60 @@
                 endPos = fileStreamPos + bufferChunkSize; // set next chunk length
             }
             // get total number of "files" we will be sending
+            //var totalParts = fileChunk.length;
+            //var partCount = 0;
+            // loop through, pulling the first item from the array each time and sending it
+
+
+            //while (chunk = fileChunk.shift()) {
+            //    partCount++;
+            //    // file name convention
+            //    var filePartName = file.name + ".part_" + partCount + "." + totalParts;
+            //    // send the file
+            //    UploadFileChunk(chunk, filePartName);
+            //}
+            UploadFileChunks(fileChunk, file.name);
+        }
+
+
+
+
+        function UploadFileChunks(fileChunk, fileName) {
             var totalParts = fileChunk.length;
             var partCount = 0;
-            // loop through, pulling the first item from the array each time and sending it
-            while (chunk = fileChunk.shift()) {
+            var post = [];
+          
+            while ((window.chunk = fileChunk.shift())) {
                 partCount++;
-                // file name convention
-                var filePartName = file.name + ".part_" + partCount + "." + totalParts;
-                // send the file
-                UploadFileChunk(chunk, filePartName);
+                var filePartName = fileName + ".part_" + partCount + "." + totalParts;
+
+                var FD = new FormData();
+                FD.append('file', window.chunk, filePartName);
+                //post.add(
+                    $.ajax({
+                    type: "POST",
+                    async: true,
+                    url: '/Files/Upload/',
+                    contentType: false,
+                    processData: false,
+                    data: FD
+                });
+                //);
+
+
+                //$.when.apply($, post).done(function () {
+                //    alert("Something went well");
+                //}).fail(function () {
+                //    alert("Something went wrong");
+                //});
+
             }
+
+
+            //when(post).then(function() {});
         }
+
+
+       
     </script>
 }
