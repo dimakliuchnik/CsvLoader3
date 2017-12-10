@@ -1,4 +1,5 @@
-﻿using CsvLoader3.Models;
+﻿using System;
+using CsvLoader3.Models;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
@@ -18,13 +19,19 @@ namespace CsvLoader3.Controllers
         [HttpGet]
         public ActionResult Upload(string fileName)
         {
-            if (fileName != null)
-            {
-                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
-            }
+            var cookie = Utils.ReadCookie(Request);
 
-            List<FilesModel> models = _filesRepository.GetAllObjectsList();
-            return View(models);
+            if (cookie!=null && cookie.Value == "Logged")
+            {
+                if (fileName != null)
+                {
+                    _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
+                }
+
+                List<FilesModel> models = _filesRepository.GetAllObjectsList();
+                return View(models);
+            }
+            return RedirectToAction("Index","Login");
         }
 
         public ActionResult UploadFile()

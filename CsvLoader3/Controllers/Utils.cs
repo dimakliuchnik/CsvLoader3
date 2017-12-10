@@ -13,7 +13,10 @@ namespace CsvLoader3.Controllers
         public string TempFolder { get; set; }
         public int MaxFileSizeMB { get; set; }
         public List<string> FileParts { get; set; }
-        const string partToken = ".part_";
+        const string partToken = ".part_";  
+        public const string PasswordKey = "Alexandra_2219256";
+        public static byte[] Iv = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        public static string cookieName = DateTime.Now.ToString() + new Random(DateTime.Now.Millisecond).Next();
 
         public Utils()
         {
@@ -205,7 +208,7 @@ namespace CsvLoader3.Controllers
                      path = Path.Combine(uploadPath, fileName);
                     try
                     {
-                        using (var fileStream = System.IO.File.Create(path))
+                        using (var fileStream = File.Create(path))
                         {
                             stream.CopyTo(fileStream);
                         }
@@ -222,7 +225,7 @@ namespace CsvLoader3.Controllers
                             {
                                 try
                                 {
-                                    System.IO.File.Delete(s);
+                                    File.Delete(s);
                                 }
                                 catch (IOException ex)
                                 {
@@ -239,6 +242,28 @@ namespace CsvLoader3.Controllers
             }
             return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
         }
+
+
+        public static void WriteAuthCookie(HttpResponseBase response)
+        {
+            HttpCookie myCookie = new HttpCookie(cookieName)
+            {
+                Value = "Logged",
+                Expires = DateTime.Now.AddDays(1)
+            };
+            
+            // Add the cookie.
+            response.Cookies.Add(myCookie); 
+        }
+
+        public static HttpCookie ReadCookie(HttpRequestBase request)
+        {
+            HttpCookie myCookie = request.Cookies[cookieName];
+
+            return myCookie;
+        }
+
+
     }
     
     public struct SortedFile
