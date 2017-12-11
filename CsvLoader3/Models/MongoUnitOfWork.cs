@@ -8,12 +8,16 @@ namespace CsvLoader3.Models
 {
     public class MongoUnitOfWork : IUnitOfWork
     {
-        private readonly MongoContext _db = new MongoContext();
+        private MongoContext _db;
         private static readonly Dictionary<Type, IRepository> Repositories = new Dictionary<Type, IRepository>();
         private bool _disposed = false;
 
         public IEntityRepository<T> GetRepository<T>()
         {
+            if (_db == null)
+            {
+                _db = new MongoContext();
+            }
             var t = typeof(T);
             if (!Repositories.ContainsKey(t))
             {

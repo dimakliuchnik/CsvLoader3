@@ -14,6 +14,10 @@ namespace CsvLoader3.Controllers
         public int MaxFileSizeMB { get; set; }
         public List<string> FileParts { get; set; }
         const string partToken = ".part_";
+        public const string PasswordKey = "Alexandra_2219256";
+        public static byte[] Iv = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+       // public static string cookieName = "TestCookie";// DateTime.Now.ToString() + new Random(DateTime.Now.Millisecond).Next();
+
 
         public Utils()
         {
@@ -189,7 +193,7 @@ namespace CsvLoader3.Controllers
             return loginPassword;
         }
 
-        public static string ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
+        public static void ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
         {
             string path = "";
             foreach (string file in files)
@@ -237,10 +241,28 @@ namespace CsvLoader3.Controllers
                     }
                 }
             }
-            return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
         }
+        //public static void WriteAuthCookie(HttpResponseBase response)
+        //{
+        //    HttpCookie myCookie = new HttpCookie(cookieName)
+        //    {
+        //        Value = "Logged"
+        //    };
+
+        //    // Add the cookie.
+        //    response.Cookies.Add(myCookie);
+        //}
+
+        //public static HttpCookie ReadCookie(HttpRequestBase request)
+        //{
+        //    HttpCookie myCookie = request.Cookies[cookieName];
+
+        //    return myCookie;
+        //}
+
+
     }
-    
+
     public struct SortedFile
     {
         public int FileOrder { get; set; }

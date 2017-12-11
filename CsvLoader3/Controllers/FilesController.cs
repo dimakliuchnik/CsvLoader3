@@ -16,13 +16,8 @@ namespace CsvLoader3.Controllers
 
         // GET: Files
         [HttpGet]
-        public ActionResult Upload(string fileName)
-        {
-            if (fileName != null)
-            {
-                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
-            }
-
+        public ActionResult Upload()
+        {   
             List<FilesModel> models = _filesRepository.GetAllObjectsList();
             return View(models);
         }
@@ -38,6 +33,7 @@ namespace CsvLoader3.Controllers
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase file)
         {
+            //var cookie = Utils.ReadCookie(Request);
             List<FilesModel> models = _filesRepository.GetAllObjectsList();
             if (ModelState.IsValid && file != null)
             {
@@ -52,6 +48,11 @@ namespace CsvLoader3.Controllers
                     ModelState.AddModelError("File", "This file format is not supported.");
                     return View(models);
                 }
+                //if (cookie == null || cookie.Value != "Logged")
+                //{
+                //    ModelState.AddModelError("File", "Please log in before loading files.");
+                //    return View(models);
+                //}
 
                 FilesModel filesModel = Utils.LoadCsvHeaderAndFillLoaderModel(file);
 
