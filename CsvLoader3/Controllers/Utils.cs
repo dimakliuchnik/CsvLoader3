@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using CsvLoader3.Models;
 
@@ -14,6 +15,8 @@ namespace CsvLoader3.Controllers
         public int MaxFileSizeMB { get; set; }
         public List<string> FileParts { get; set; }
         const string partToken = ".part_";
+        public const string PasswordKey = "Alexandra_2219256";
+        public static byte[] Iv = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
 
         public Utils()
         {
@@ -189,7 +192,7 @@ namespace CsvLoader3.Controllers
             return loginPassword;
         }
 
-        public static string ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
+        public static void ProcessWithFileLoading(HttpFileCollectionBase files, HttpServerUtilityBase server)
         {
             string path = "";
             foreach (string file in files)
@@ -205,7 +208,7 @@ namespace CsvLoader3.Controllers
                      path = Path.Combine(uploadPath, fileName);
                     try
                     {
-                        using (var fileStream = System.IO.File.Create(path))
+                        using (var fileStream = File.Create(path))
                         {
                             stream.CopyTo(fileStream);
                         }
@@ -218,14 +221,18 @@ namespace CsvLoader3.Controllers
                         if (result)
                         {
                             var filesList = Utils.GetFileListForDeletion(path);
+                            System.GC.Collect();
+                            System.GC.WaitForPendingFinalizers();
                             foreach (var s in filesList)
                             {
                                 try
                                 {
-                                    System.IO.File.Delete(s);
+                                    File.Delete(s);
                                 }
                                 catch (IOException ex)
                                 {
+                                    File.Delete(s);
+
                                     throw new Exception(ex.Message);
                                 }
                             }
@@ -237,10 +244,10 @@ namespace CsvLoader3.Controllers
                     }
                 }
             }
-            return path.Substring(0, path.IndexOf(partToken, StringComparison.Ordinal));
+           
         }
     }
-    
+
     public struct SortedFile
     {
         public int FileOrder { get; set; }

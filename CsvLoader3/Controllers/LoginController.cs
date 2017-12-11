@@ -10,7 +10,6 @@ namespace CsvLoader3.Controllers
     {
         private readonly IEntityRepository<LoginModel> _loginRepository;
         private readonly EncrDecrHelper _encrDecrHelper = new EncrDecrHelper();
-        private const string PasswordKey = "Alexandra_2219256";
         public byte[] Iv { get; } = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
 
         public LoginController(IUnitOfWork unitOfWork)
@@ -32,10 +31,9 @@ namespace CsvLoader3.Controllers
             //return View(model);
 
             var message = "";
-            var userUniqueKey = "";
             var status = false;
             SHA256 mySha256 = SHA256Managed.Create();
-            byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(PasswordKey));
+            byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(Utils.PasswordKey));
 
             var loginPassword = Utils.LoadDbLoginPasswordObjects(_loginRepository, _encrDecrHelper, key, Iv);
             if (loginPassword.ContainsKey(login.Email) && loginPassword[login.Email] == login.Password)
@@ -51,7 +49,7 @@ namespace CsvLoader3.Controllers
 
                 //2FA Setup
                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-                userUniqueKey = (login.Email + PasswordKey);
+                var userUniqueKey = (login.Email + Utils.PasswordKey);
                 Session["UserUniqueKey"] = userUniqueKey;
                 var setupInfo = tfa.GenerateSetupCode("Dotnet Awesome", login.Email, userUniqueKey, 300, 300);
                 ViewBag.BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;

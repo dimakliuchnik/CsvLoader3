@@ -16,13 +16,8 @@ namespace CsvLoader3.Controllers
 
         // GET: Files
         [HttpGet]
-        public ActionResult Upload(string fileName)
+        public ActionResult Upload()
         {
-            if (fileName != null)
-            {
-                _filesRepository.Create(Utils.LoadCsvHeaderAndFillLoaderModel(fileName));
-            }
-
             List<FilesModel> models = _filesRepository.GetAllObjectsList();
             return View(models);
         }
