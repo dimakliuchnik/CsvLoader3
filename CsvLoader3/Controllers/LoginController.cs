@@ -25,12 +25,7 @@ namespace CsvLoader3.Controllers
         [HttpPost]
         public ActionResult Index(LoginModel login)
         {
-            //var model = new LoginViewModel(login.Model, _loginRepository, Session, ViewBag);
-            //model.Login();
-            //return View(model);
-
             var message = "";
-            var status = false;
             SHA256 mySha256 = SHA256Managed.Create();
             byte[] key = mySha256.ComputeHash(Encoding.ASCII.GetBytes(Utils.PasswordKey));
 
@@ -42,8 +37,6 @@ namespace CsvLoader3.Controllers
                 //dict.Add("Password", _encrDecrHelper.EncryptString(login.Password,key,Iv));
                 //await _mongoDbHelper.SaveObjectToCollection(database, dict, LoginPassword);
 
-                status = true; // show 2FA form
-                message = "2FA Verification";
                 Session["Email"] = login.Email;
 
                 //2FA Setup
@@ -55,12 +48,8 @@ namespace CsvLoader3.Controllers
                 ViewBag.SetupCode = setupInfo.ManualEntryKey;
                 return RedirectToAction("_2FA", "_2FA", new { @qrCodeSetupImageUrl = ViewBag.BarcodeImageUrl, @manualEntryKey = ViewBag.SetupCode });
             }
-            else
-            {
-                message = "Invalid credential";
-            }
+            message = "Invalid credential";
             ViewBag.Message = message;
-            ViewBag.Status = status;
             return RedirectToAction("Index", "Login");
         }
     }
