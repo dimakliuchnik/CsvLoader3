@@ -222,11 +222,13 @@ namespace CsvLoader3.Controllers
                         if (result)
                         {
                             var filesList = Utils.GetFileListForDeletion(path);
+                            System.GC.Collect();
+                            System.GC.WaitForPendingFinalizers();
                             foreach (var s in filesList)
                             {
                                 try
                                 {
-                                    System.IO.File.Delete(s);
+                                    File.Delete(s);
                                 }
                                 catch (IOException ex)
                                 {
